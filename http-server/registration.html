@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <!-- <link rel="stylesheet" href="registration.css"> -->
+    <!-- <link rel="stylesheet" href="jquery-ui.min.css"> -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        #fieldset1 {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1), -5px 0 10px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.1);
+            background: beige;
+        }
+
+        #fieldset2 {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: beige;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1), -5px 0 10px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 5px;
+            font-size: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: black;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            /* background: cornsilk; */
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: wheat;
+            text-align: center;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        #submit {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #0056b3;
+        }
+
+        #tableData {
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <fieldset id="fieldset1">
+        <h2>Registration Form</h2>
+        <form onsubmit="return Submit()">
+            <p>
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter full Name" name="Name" required>
+            </p>
+            <p>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter email" name="Email" required>
+            </p>
+            <p>    
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" name="Password" required>
+            </p>
+            <p>
+                <label for="dob">Date of Birth</label>
+                <input type="date" name="DOB" id="dob">
+            </p>
+            <p id="iagree">
+                <input type="checkbox" id="agree-to-terms" required>
+                <label for="agree-to-terms">Accept Terms & Conditions</label>
+            </p>
+            <input type="submit" id="submit" value="Submit"/>
+        </form>
+    </fieldset>
+
+    <fieldset id="fieldset2">
+        <h2>Entries</h2>
+        <table id="tableData">
+            <thead>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Dob</th>
+                <th>Accepted terms?</th>
+            </thead>
+
+            <tbody>
+                <!-- rows to be added dynamically -->
+            </tbody>
+        </table>
+    </fieldset>
+
+    <!-- back to home and Projects -->
+    <a href="./project">&lt;- Projects</a>
+    <a href="/">&lt;- Back to home</a>
+
+    <!-- <script src="registration.js"></script> -->
+    <script>
+        const currentDate = new Date();
+        const minDate = new Date();
+        const maxDate = new Date();
+
+        minDate.setFullYear(currentDate.getFullYear() - 55);
+        // minDate.setDate(minDate.getDate() + 1);
+        maxDate.setFullYear(currentDate.getFullYear() - 18);
+        // maxDate.setDate(maxDate.getDate() + 1);  
+
+        document.getElementById("dob").setAttribute("min", minDate.toISOString().split('T')[0]);
+        document.getElementById("dob").setAttribute("max", maxDate.toISOString().split('T')[0]);
+
+        if (localStorage.getItem("Names") == null) {
+            localStorage.setItem("Names", "[]");
+        }
+        if (localStorage.getItem("Emails") == null) {
+            localStorage.setItem("Emails", "[]");
+        }
+        if (localStorage.getItem("Passwords") == null) {
+            localStorage.setItem("Passwords", "[]");
+        }
+        if (localStorage.getItem("DOBs") == null) {
+            localStorage.setItem("DOBs", "[]");
+        }
+
+        function displayData() {
+            const names = JSON.parse(localStorage.getItem("Names"));
+            const emails = JSON.parse(localStorage.getItem("Emails"));
+            const passwords = JSON.parse(localStorage.getItem("Passwords"));
+            const dobs = JSON.parse(localStorage.getItem("DOBs"));
+
+            const tableBody = document.querySelector("#tableData tbody");
+            // Clear existing table rows
+            tableBody.innerHTML = "";
+
+            for (let i = 0; i < names.length; i++) {
+                const row = document.createElement("tr");
+                const nameCell = document.createElement("td");
+                const emailCell = document.createElement("td");
+                const passCell = document.createElement("td");
+                const dobCell = document.createElement("td");
+                const agreedCell = document.createElement("td");
+
+                nameCell.textContent = names[i];
+                emailCell.textContent = emails[i];
+                passCell.textContent = passwords[i];
+                dobCell.textContent = dobs[i];
+                agreedCell.textContent = "true";
+
+                row.appendChild(nameCell);
+                row.appendChild(emailCell);
+                row.appendChild(passCell);
+                row.appendChild(dobCell);
+                row.appendChild(agreedCell);
+
+                tableBody.appendChild(row);
+            }
+
+        }
+
+        displayData();
+
+        function Submit() {
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const dob = document.getElementById("dob").value;
+
+            var old_n = JSON.parse(localStorage.getItem("Names"));
+            old_n.push(name);
+            localStorage.setItem("Names", JSON.stringify(old_n));
+            
+            var old_e = JSON.parse(localStorage.getItem("Emails"));
+            old_e.push(email);
+            localStorage.setItem("Emails", JSON.stringify(old_e));
+            
+            var old_p = JSON.parse(localStorage.getItem("Passwords"));
+            old_p.push(password);
+            localStorage.setItem("Passwords", JSON.stringify(old_p));
+            
+            var old_d = JSON.parse(localStorage.getItem("DOBs"));
+            old_d.push(dob);
+            localStorage.setItem("DOBs", JSON.stringify(old_d));
+
+
+            // Clear input fields
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("dob").value = "";
+
+            displayData();
+            return false;
+        }
+    </script>
+</body>
+</html>
