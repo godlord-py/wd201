@@ -25,7 +25,10 @@ const todoList = () => {
     // of todo items that are due today accordingly.
     dueTodays = []
     for (let i = 0; i < all.length; i++) {
-      if (all[i].dueDate == today && all[i].completed == false) {
+      if (all[i].dueDate == today && all[i].completed) {
+        dueTodays.push(all[i])
+      }
+      else if(all[i].dueDate == today && all[i].completed == false){
         dueTodays.push(all[i])
       }
     }
