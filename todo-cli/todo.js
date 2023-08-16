@@ -21,20 +21,18 @@ const todoList = () => {
   }
 
   const dueToday = () => {
+    const today = new Date().toISOString().slice(0, 10);
     // Write the date check condition here and return the array
     // of todo items that are due today accordingly.
-    dueTodays = []
-    for (let i = 0; i < all.length; i++) {
-      if (all[i].dueDate == today && all[i].completed) {
-        dueTodays.push(all[i])
-      }
-      else if(all[i].dueDate == today && all[i].completed == false){
-        dueTodays.push(all[i])
-      }
-    }
-    return dueTodays
-  
-  }
+
+  const dueTodays = all.filter(task => task.dueDate === today)
+                        .map(task => {
+                          const { dueDate, ...taskWithoutDate } = task;
+                          return taskWithoutDate;
+                        });
+
+  return dueTodays;
+};
   const dueLater = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
