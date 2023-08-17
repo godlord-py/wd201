@@ -21,18 +21,9 @@ const todoList = () => {
   }
 
   const dueToday = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    // Write the date check condition here and return the array
-    // of todo items that are due today accordingly.
-
-  const dueTodays = all.filter(task => task.dueDate === today)
-                        .map(task => {
-                          const { dueDate, ...taskWithoutDate } = task;
-                          return taskWithoutDate;
-                        });
-
-  return dueTodays;
-};
+    const today = new Date().toISOString().split("T")[0];
+      return all.filter((item) => item.dueDate === today);
+    };
   const dueLater = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
@@ -40,7 +31,7 @@ const todoList = () => {
     for (let i = 0; i < all.length; i++) {
       if (all[i].dueDate > today && all[i].completed == false) {
         dueLaters.push(all[i])
-      }
+      } 
     }
     return dueLaters
   
@@ -50,19 +41,18 @@ const todoList = () => {
   const toDisplayableList = (list) => {
     // Format the To-Do list here, and return the output string
     // as per the format given above.
-    var output = ""
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].completed == true) {
-        output += `[X] ${list[i].title} ${list[i].dueDate}\n`
-      }
-      else {
-        output += `[ ] ${list[i].title} ${list[i].dueDate}\n`
-      }
-    }
-    return output
+    return list
+    .map((item) => {
+      let checkbox = item.completed ? "[x]" : "[ ]";
+      const formattedDate =
+        item.dueDate !== new Date().toISOString().split("T")[0]
+          ? " " + item.dueDate
+          : "";
+      return `${checkbox} ${item.title}${formattedDate}`;
+    })
+    .join("\n");
+};       
 
-  
-  }
 
   return {
     all,
