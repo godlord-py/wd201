@@ -28,10 +28,7 @@ fs.readFile("registration.html", (err, registration) => {
   registrationContent = registration;
 });
 
-// const lineDetail = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
+
 
 const port = argv.port || 3000;
 
@@ -58,6 +55,3 @@ http
     console.log(`Server is running on port ${port}`);
   });
 
-// lineDetail.question("Press Enter to close the server...", () => {
-//   lineDetail.close();
-// });
