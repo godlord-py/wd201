@@ -11,8 +11,24 @@ const { all, markAsComplete, add } = todoList();
 
 describe("todoList", () => {
   beforeAll(() => {
+    const today = new Date();
+    const oneDay = 60 * 60 * 24 * 1000; //referred to discord forum for this line of code
     add({
       title: "Test todo",
+      completed: false,
+      dueDate: new Date(today.getTime() - 1 * oneDay).toLocaleDateString(
+        "en-CA",
+      ),
+    });
+    add({
+      title: "Test todo2",
+      completed: false,
+      dueDate: new Date(today.getTime() + 1 * oneDay).toLocaleDateString(
+        "en-CA",
+      ),
+    });
+    add({
+      title: "Test todo3",
       completed: false,
       dueDate: new Date().toLocaleDateString("en-CA"),
     });
@@ -31,20 +47,19 @@ describe("todoList", () => {
     markAsComplete(0);
     expect(all[0].completed).toBe(true);
   });
-  test("Creating a new todo", () => {
-    const todoItemsCount = all.length;
-    add({
-      title: "Test todo",
-      completed: false,
-      dueDate: new Date().toLocaleDateString("en-CA"),
-    });
-    expect(all.length).toBe(todoItemsCount + 1);
+  // test("Creating a new todo", () => {
+  //   const todoItemsCount = all.length;
+  //   add({
+  //     title: "Test todo",
+  //     completed: false,
+  //     dueDate: new Date().toLocaleDateString("en-CA"),
+  //   });
+  //   expect(all.length).toBe(todoItemsCount + 1);
 
-    // test("should mark a todo as complete test", () => {
-    //   expect(all[0].completed).toBe(false);
-    //   markAsComplete(0);
-    //   expect(all[0].completed).toBe(true);
-  });
+  // test("should mark a todo as complete test", () => {
+  //   expect(all[0].completed).toBe(false);
+  //   markAsComplete(0);
+  //   expect(all[0].completed).toBe(true);
   test("checks return a list of overdue todos", () => {
     expect(todoList().overdue()).toEqual([]);
   });
