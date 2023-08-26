@@ -22,7 +22,7 @@ const todoList = () => {
     // of overdue items accordingly.
     overdues = [];
     for (let i = 0; i < all.length; i++) {
-      if (all[i].dueDate < today && all[i].completed == false) {
+      if (all[i].dueDate < new Date().toLocaleDateString("en-CA")) {
         overdues.push(all[i]);
       }
     }
@@ -38,7 +38,7 @@ const todoList = () => {
     // of todo items that are due later accordingly.
     dueLaters = [];
     for (let i = 0; i < all.length; i++) {
-      if (all[i].dueDate > today && all[i].completed == false) {
+      if (all[i].dueDate > new Date().toLocaleDateString("en-CA")) {
         dueLaters.push(all[i]);
       }
     }
