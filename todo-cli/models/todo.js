@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       console.log("\n");
 
       console.log("Due Today");
+      //For an incomplete todo due today, Todo.displayableString should return a string of the format ID. [ ] TITLE (date should not be shown)
       // FILL IN HERE
       const dueTodayItems = await Todo.dueToday();
       dueTodayItems.forEach((item) => {
@@ -54,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async dueToday() {
+      //For an incomplete todo due today, Todo.displayableString should return a string of the format ID. [ ] TITLE (date should not be shown)
       // FILL IN HERE TO RETURN ITEMS DUE tODAY
       return await Todo.findAll({
         where: {
@@ -64,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+      
 
     static async dueLater() {
       // FILL IN HERE TO RETURN ITEMS DUE LATER
@@ -86,9 +89,14 @@ module.exports = (sequelize, DataTypes) => {
 
     displayableString() {
       let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
+      let displayDate =
+        this.dueDate === new Date().toLocaleDateString("en-CA")
+          ? ""
+          : this.dueDate;
+      return `${this.id}. ${checkbox} ${this.title} ${displayDate}`.trim();
     }
   }
+      //  `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
   Todo.init({
     title: DataTypes.STRING,
     dueDate: DataTypes.DATEONLY,
