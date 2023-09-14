@@ -4,6 +4,7 @@ const {
   Model
 } = require('sequelize');
 const { Op } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -73,11 +74,12 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: {
-            [Op.gt]: new Date().toISOString().split("T")[0],  
+            [Op.gt]: new Date().toISOString().split("T")[0],
           },
         },
       });
     }
+
 
     static async markAsComplete(id) {
       // FILL IN HERE TO MARK AN ITEM AS COMPLETE
