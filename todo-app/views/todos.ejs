@@ -1,51 +1,16 @@
-<!-- <!DOCTYPE html>
-<table> 
-<% for(var i = 0; i< allTodos.length; i++) {%> 
-        <tr>
-            <td> 
-                 <%= allTodos[i].title %> 
-             </a> 
-         </td> 
-     </tr> 
-     <% } %> 
- </table>
- </html> -->
- <div>
-    <h5 style="display:inline">Overdue</h5> <span style="display:inline" id='count-overdue' class="bg-gray-200 text-red px-3 py-1 rounded font-medium mr-2 mb-2">2</span>
-    <ul class="list-none">
-      <li class="Todo-Item">
-        <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-blue-50">
-          <input id="todo-checkbox-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border ">
-          <label for="todo-checkbox-1" class="ml-2 text-sm text-gray-600 cursor-pointer"> Go College </label>
-          </a>            
-        </div>
-      </li>
-      <li class="Todo-Item" >
-        <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50">
-          <input id="todo-checkbox-2" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border ">
-          <label for="todo-checkbox-2" class="ml-2 text-sm text-gray-600 cursor-pointer"> Practicals </label>
-          </a>
-        </div>
-      </li>
-    </ul>
-    <h5 style="display:inline">Due Today</h5> <span style="text-align:right" id='count-due-today' class="bg-gray-200 text-red px-3 py-1 rounded font-medium mr-2 mb-2">1</span>
-    <ul class="list-none">
-      <li class="Todo-Item" >
-        <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50">
-          <input id="todo-checkbox-3" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border ">
-          <label for="todo-checkbox-3" class="ml-2 text-sm text-gray-600 cursor-pointer"> Study </label>
-          </a>
-        </div>
-      </li>
-    </ul>
-    <h5 style="display:inline">Due Later</h5> <span style="text-align:right" id='count-due-later' class="bg-gray-200 text-red px-3 py-1 rounded font-medium mr-2 mb-2">1</span>
-    <ul class="list-none">
-      <li class="Todo-Item" >
-        <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50">
-          <input id="todo-checkbox-4" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border ">
-          <label for="todo-checkbox-4" class="ml-2 text-sm text-gray-600 cursor-pointer"> Valorant </label>
-          </a>
-        </div>
-      </li>
-    </ul>
-  </div>
+ <table border="1" style="border: 1px solid black;">
+    <tr style="border: 1px solid black;">
+        <td>ID</td>
+        <td>Title</td>
+        <td>DueDate</td>
+        <td>Completed</td>
+    </tr>
+    <% for( var i = 0; i < all_Todos.length; i++) {%>
+        <tr style="border: 1px solid black;">
+            <td><%= all_Todos[i].id %></td>
+            <td><%= all_Todos[i].title %></td>
+            <td><%= all_Todos[i].duedate %></td>
+            <td><%= all_Todos[i].completed %></td>
+        </tr>
+    <% } %>
+</table> 
