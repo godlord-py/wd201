@@ -49,3 +49,19 @@
       </li>
     </ul>
   </div> -->
+  <table border="1" style="border: 1px solid black;">
+    <tr style="border: 1px solid black;">
+        <td>ID</td>
+        <td>Title</td>
+        <td>DueDate</td>
+        <td>Completed</td>
+    </tr>
+    <% for( var i = 0; i < allTodos.length; i++) {%>
+        <tr style="border: 1px solid black;">
+            <td><%= allTodos[i].id %></td>
+            <td><%= allTodos[i].title %></td>
+            <td><%= allTodos[i].duedate %></td>
+            <td><%= allTodos[i].completed %></td>
+        </tr>
+    <% } %>
+</table>
