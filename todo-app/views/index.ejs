@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang=" "en>
     <head>
         <meta charset = "UTF-8">
@@ -6,22 +6,27 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        <link rel="stylesheet" href="/public/css/styles.css">
+        <link rel="stylesheet" href="/css/styles.css">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>  
-        <%- include('header.ejs') %>
-        <!-- <table>
-            <% for(var i = 0; i< allTodos.length; i++) {%>
-                <tr>
-                    <td>
-                        <%= allTodos[i].title %>
-                    </a>
-                </td>
-            </tr>
-            <% } %>
-        </table> -->
-        <%- include('todos.ejs') %>
+    <body> 
+        <div class = "grid grid-cols-6">
+            <div class = "col-start-3 col-span-2">  
+                <%- include('header.ejs') %>
+                <form>
+                    <div class="flex gap-2 py-4">
+                        <div class = "flex-auto">
+                            <input type = "text" placeholder="What's next?" class= "border border-gray-500 rounded text-gray-900 p-2 w-full text-sm" required />
+                        </div>
+                        <div class = "flex-auto">
+                            <input type = "date" class = "border border-gray-500 rounded text-gray-900 p-2 w-full text-sm leading-4"/>
+                        </div>
+                        <div class = "flex-none">
+                            <button type = "submit" class = "px-5 py-1.5 rounded background-color: bg-green-600 text-white font-medium mr-2 mb-2">Add</button> 
+                        </div>
+                 </form>
+         <%- include('todos.ejs') %>
         <%- include('footer.ejs') %>
     </body>
 </html>
+
