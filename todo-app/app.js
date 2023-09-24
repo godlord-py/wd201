@@ -8,31 +8,26 @@ app.use(express.urlencoded({extended: false}));
 app.set("view engine", "ejs");
 const ejs = require('ejs');
 
-ejs.renderFile(path.join(__dirname, 'views', 'index.ejs'), { async: true }, (err, html) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(html);
-  }
-});
+// ejs.renderFile(path.join(__dirname, 'views', 'index.ejs'), { async: true }, (err, html) => {
+//   if (err) {
+//     console.error(err);
+//   } else {
+//     console.log(html);
+//   }
+// });
 
 // app.get("/", function (request, response) {
 //   response.send("Hello World");
 // });
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (request, response) => { 
-  // const allTodos = await Todo.getTodos();   
-  const overdue = await Todo.overdue();
-  const dueToday = await Todo.dueToday();
-  const dueLater = await Todo.dueLater();
+  const allTodos = await Todo.getTodos();   
+  // const overdue = await Todo.overdue();
+  // const dueToday = await Todo.dueToday();
+  // const dueLater = await Todo.dueLater();
 
   if(request.accepts("html")) {
-    response.render("index", { 
-      title: "Todo List", 
-      overdue,
-      dueToday,
-      dueLater
-     });
+    response.render("index", {allTodos});
   }
   else {
     response.json({
