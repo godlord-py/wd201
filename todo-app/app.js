@@ -4,6 +4,7 @@ const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: false}));
 
 // app.get("/", function (request, response) {
 //   response.send("Hello World");
@@ -24,10 +25,6 @@ app.get("/", async (request, response) => {
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
-  // FILL IN YOUR CODE HERE
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
   try {
     const todos = await Todo.findAll();
     return response.json(todos);
@@ -50,8 +47,11 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+    })
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
