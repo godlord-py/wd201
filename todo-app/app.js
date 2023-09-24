@@ -13,6 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.get("/", async (request, response) => { 
   const allTodos = await Todo.getTodos();   
+  const overdue = await Todo.overdue();
   if(request.accepts("html")) {
     response.render("index", { allTodos });
   }

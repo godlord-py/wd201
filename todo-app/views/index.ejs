@@ -13,7 +13,7 @@
         <div class = "grid grid-cols-6">
             <div class = "col-start-3 col-span-2">  
                 <%- include('header.ejs') %>
-                <form action= "/todos" method= "post">
+                <form action= "todos.ejs" method= "post">
                     <div class="flex gap-2 py-4">
                         <div class = "flex-auto">
                             <input type = "text" name = "title" placeholder="What's next?" class= "border border-gray-500 rounded text-gray-900 p-2 w-full text-sm" required />
@@ -25,7 +25,7 @@
                             <button type = "submit" class = "px-5 py-1.5 rounded background-color: bg-green-600 text-white font-medium mr-2 mb-2">Add</button> 
                         </div>
                  </form>
-         <%- include('todos.ejs') %>
+         <%- include('todos.ejs', {title: "Overdue", data: Overdue}) %>
         <%- include('footer.ejs') %>
     </body>
 </html>
