@@ -37,7 +37,9 @@ app.get("/", async (request, response) => {
   }
   else {
     response.json({
-      allTodos
+      overdue,
+      dueToday,
+      dueLater,
     })
   }
 });
@@ -90,13 +92,12 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
 
 app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
-  // FILL IN YOUR CODE HERE
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
-  const delete_todo = await Todo.destroy({ where: { id: request.params.id } });
-  // console.log(delete_todo);
-  response.send(delete_todo ? true : false);
+  try {
+    await Todo.remove(request.params.id);
+    return response.json({success: true});
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
 });
-
 module.exports = app;
