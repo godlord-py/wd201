@@ -3,11 +3,14 @@ const app = express();
 const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
+const csrf = require("tiny-csrf");
+const cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: false}));
+app.use(cookieParser("shhhh, very secret"));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 app.set("view engine", "ejs");
 const ejs = require('ejs');
-
 // ejs.renderFile(path.join(__dirname, 'views', 'index.ejs'), { async: true }, (err, html) => {
 //   if (err) {
 //     console.error(err);
@@ -32,7 +35,8 @@ app.get("/", async (request, response) => {
       allTodos,
       overdue,
       dueToday,
-      dueLater
+      dueLater,
+      csrfToken: request.csrfToken(),
     });
   }
   else {
