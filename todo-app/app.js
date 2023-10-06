@@ -28,6 +28,7 @@ app.get("/", async (request, response) => {
   const overdue = await Todo.overdue();
   const dueToday = await Todo.dueToday();
   const dueLater = await Todo.dueLater();
+  let completeditems = await Todo.completeditems();
 
   if(request.accepts("html")) {
     response.render("index", {
@@ -36,6 +37,7 @@ app.get("/", async (request, response) => {
       overdue,
       dueToday,
       dueLater,
+      completeditems,
       csrfToken: request.csrfToken(),
     });
   }
@@ -44,6 +46,7 @@ app.get("/", async (request, response) => {
       overdue,
       dueToday,
       dueLater,
+      completeditems,
     })
   }
 });

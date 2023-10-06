@@ -65,19 +65,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     static completeditems() {
-    return this.findAll({
-      where: {
-        completed: true,
-      },
-      order: [["id", "ASC"]],
-    });
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static async remove(id) {
+      return this.destroy({
+        where: { id },
+      });
+    }
   }
-  static async remove(id) {
-    return this.destroy({
-      where: { id },
-    });
-  }
-}
   Todo.init({
     title: DataTypes.STRING,
     dueDate: DataTypes.DATEONLY,

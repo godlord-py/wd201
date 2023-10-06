@@ -15,22 +15,22 @@
                 .getAttribute("content");
             function updateTodo(id) {
                 let dec=document.querySelector(`#todo-checkbox-${id}`).checked
-            fetch(`/todos/${id}`,{
-                method:"put",
-                headers:{"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    _csrf:token,
-                    completed: dec
+                fetch(`/todos/${id}`,{
+                    method:"put",
+                    headers:{"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        _csrf:token,
+                        completed: dec
+                    })
                 })
-            })
-            .then((res)=>{
-                if(res.ok){
-                    window.location.reload();
-                }
+                .then((res)=>{
+                    if(res.ok){
+                        window.location.reload();
+                    }   
                 
-            })
-            .catch((err)=>console.error(err));
-        }
+                })
+                .catch((err)=>console.error(err));
+            }
             function deleteTodo(id) {
                 fetch(`/todos/${id}`,{
                     method: "delete",
@@ -66,9 +66,10 @@
                         </div>
                     </div>
                  </form>
-                 <%- include('todos.ejs', { title: "Overdue", data: overdue }) %>
-                 <%- include('todos.ejs', { title: "Due Today", data: dueToday }) %>
-                 <%- include('todos.ejs', { title: "Due Later", data: dueLater }) %>
+                 <%- include("todos.ejs",{title:"Overdue", data:overdue , id:"count-overdue"}) %>
+                 <%- include("todos.ejs",{title:"Due Today", data:dueToday, id:"count-due-today"}) %>
+                 <%- include("todos.ejs",{title:"Due Later", data:dueLater, id:"count-due-later"}) %>
+                 <%- include("todos.ejs",{title:"Completed Items", data:completeditems,id:"count-completed"}) %>
                  <%- include('footer.ejs') %>
             </div>
         </div>
