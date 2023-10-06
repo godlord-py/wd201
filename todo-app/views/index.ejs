@@ -14,20 +14,23 @@
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
             function updateTodo(id) {
-                fetch(`/todos/${id}/markAsCompleted`, {
-                    method: "put",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        "_csrf": token,
-                    })
-                    })
-                    .then((res) => {
-                        if(res.ok) {
-                            window.location.reload();
-                        }
-                    })
-                    .catch((err) => console.error(err));
-            }
+                let dec=document.querySelector(`#todo-checkbox-${id}`).checked
+            fetch(`/todos/${id}`,{
+                method:"put",
+                headers:{"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    _csrf:token,
+                    completed: dec
+                })
+            })
+            .then((res)=>{
+                if(res.ok){
+                    window.location.reload();
+                }
+                
+            })
+            .catch((err)=>console.error(err));
+        }
             function deleteTodo(id) {
                 fetch(`/todos/${id}`,{
                     method: "delete",
