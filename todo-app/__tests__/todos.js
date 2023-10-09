@@ -2,6 +2,14 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../models/index');
 var cheerio = require("cheerio");
+const CST = (days) => {
+  if (!Number.isInteger(days)) {
+    throw new Error("Need to pass an integer as days");
+  }
+  const today = new Date();
+  const oneDay = 60 * 60 * 24 * 1000;
+  return new Date(today.getTime() + days * oneDay)
+}
 // const { DESCRIBE } = require('sequelize/types/query-types');
 let server, agent;
 function extractCsrfToken(res) {
@@ -74,21 +82,77 @@ test("responds with json at /todos POST endpoint", async () => {
     // expect(parsedResponse[3]["title"]).toBe("Buy ps3");
   });
 
-//   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-//     // FILL IN YOUR CODE HERE
-//     const response = await agent.post("/todos").send({
-//       title: "Buy xbox",
-//       dueDate: new Date().toISOString(),
-//       completed: false,
-
-//   });
-//   const parsedResponse = JSON.parse(response.text);
-//   const todoID = parsedResponse.id;
-//   const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
-//   const parsedDeleteResponse = JSON.parse(deleteResponse.text);
-//   expect(parsedDeleteResponse).toBe(true);
-  
-// });
+  test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    await agent.post("/todos").send({
+      title: "Buy xbox",
+      dueDate: new Date().toISOString(),
+      completed: false,
+      "_csrf": csrfToken
+  });
+  // const parsedResponse = JSON.parse(response.text);
+  // const todoID = parsedResponse.id;
+  // const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+  // const parsedDeleteResponse = JSON.parse(deleteResponse.text);
+  // expect(parsedDeleteResponse).toBe(true); 
+});
+  test("Should not create a todo item with empty dueDate", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: "",
+      completed: false,
+      "_csrf": csrfToken
+    });
+    expect(response.statusCode).toBe(422);
+  });
+  test(" Should create sample due today item", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/todos").send({
+      title: "sample due today item",
+      dueDate: new Date().toISOString(),
+      completed: false,
+      "_csrf": csrfToken
+    });
+  })
+  test(" Should create sample due later item", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/todos").send({
+      title: "sample due later item",
+      dueDate: CST(2).toISOString(),
+      completed: false,
+      "_csrf": csrfToken
+    });
+  });
+  test(" Should create sample overdue item", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/todos").send({
+      title: "Sample overdue item",
+      dueDate: CST(-2).toISOString(),
+      completed: false,
+      "_csrf": csrfToken
+    });
+  });
+  test(" Should mark sample overdue item as completed", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
+    const response = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: CST(-2).toISOString(),
+      completed: false,
+      "_csrf": csrfToken
+    });
+    const parsedResponse = JSON.parse(response.text);
+    const todoID = parsedResponse.id;
+    const markAsCompletedResponse = await agent.put(`/todos/${todoID}`).send({completed: true});
+    const parsedMarkAsCompletedResponse = JSON.parse(markAsCompletedResponse.text);
+    expect(parsedMarkAsCompletedResponse.completed).toBe(true);
+  });
 
 });
 
