@@ -30,13 +30,12 @@ describe("Todo test suite", () => {
       } catch (error) {
         console.log(error);
       }
-    })
-    
+    })    
 })
 test("responds with json at /todos POST endpoint", async () => {
-    const res = await agent.get("/");
+    const res = await agent.get("/signup");
     const csrfToken = extractCsrfToken(res);
-    const response = await agent.post("/todos").send({
+    const response = await agent.post("/users").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
@@ -49,8 +48,19 @@ test("responds with json at /todos POST endpoint", async () => {
     // );
     // const parsedResponse = JSON.parse(response.text);
     // expect(parsedResponse.id).toBeDefined();
-
   });
+test("Sign Up", async ()=> {
+  let res = await agent.get("/signup");
+  const csrfToken = extractCsrfToken(res);
+  res = await agent.post("/users").send({
+    firstName: "Test",
+    lastName: "User",
+    email: "test@test.com",
+    password: "password",
+    _csrf: csrfToken,
+});
+  expect(res.statusCode).toBe(302);   
+});
    test("Marks a todo with the given ID as complete", async () => {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);

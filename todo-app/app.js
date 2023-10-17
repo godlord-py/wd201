@@ -72,11 +72,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/todos", connectEnsureLogin.ensureLoggedIn(),  async (request, response) => { 
   console.log(request.user)
-  const allTodos = await Todo.getTodos();   
-  const overdue = await Todo.overdue();
-  const dueToday = await Todo.dueToday();
-  const dueLater = await Todo.dueLater();
-  let completeditems = await Todo.completeditems();
+  const loggedInUser = request.user.id;
+  const allTodos = await Todo.getTodos(loggedInUser);   
+  const overdue = await Todo.overdue(loggedInUser);
+  const dueToday = await Todo.dueToday(loggedInUser);
+  const dueLater = await Todo.dueLater(loggedInUser);
+  let completeditems = await Todo.completeditems(loggedInUser);
 
   if(request.accepts("html")) {
     response.render("todos", {
@@ -101,28 +102,31 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(),  async (request, response
 
 app.get("/signup", (request , response) => {
   response.render("signup" , {
-    title : "Sign Up",
+    title : "Sign Up",  
     csrfToken: request.csrfToken(),
   })
 })
 app.post("/users", async (request , response) => {
  //hash pass
- const hashpwd = await bcrypt.hash(request.body.password, saltRounds)
+ const hashedpwd = await bcrypt.hash(request.body.Password, saltRounds)
  try {
+  console.log(request.body.password);
   const user = await User.create({
     firstName: request.body.firstName,
     lastName: request.body.lastName,
-    email: request.body.email,
-    password: hashpwd,
+    Email: request.body.email,
+    password: hashedpwd,
   });
   request.login(user, (err) => {
     if(err) {
       console.log(err)
-    }
+      console.log(request.body.password);
+    } 
     response.redirect("/todos");  
   })
  }catch(error) {
   console.log(error);
+  console.log(request.body.password);
  }
 })
 
@@ -171,8 +175,9 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn() , async function (request
     await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
+      userID: request.user.id,  
     })
-    return response.redirect("/");
+    return response.redirect("/todos");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -203,7 +208,7 @@ app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (reques
 app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
   try {
-    await Todo.remove(request.params.id);
+    await Todo.remove(request.params.id, request.user.id);
     return response.json({success: true});
   } catch (error) {
     console.log(error);
