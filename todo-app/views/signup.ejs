@@ -1,0 +1,42 @@
+<!DOCTYPE html>  
+<html lang=" "en>
+    <head>
+        <meta charset = "UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <meta name = "csrf-token" content="<%= csrfToken %>" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/styles.css">
+        <script src="https://cdn.tailwindcss.com"></script> 
+    </head>
+    <body> 
+        <div class = "grid grid-cols-6">
+            <div class = "col-start-3 col-span-2">  
+                <%- include('header.ejs')%>
+                <h6 class="py-4">Sign-up as a new user</h6>
+                <form action="/users" method= "post">
+                    <input type = "hidden" name="_csrf" value="<%= csrfToken %>" >
+                    <div class = "py-3 " >
+                    <label for="First Name">First Name:</label>
+                    <input type = "text" name= "First Name:" class = "border border-gray-400 text-gray-900 rounded p-4 w-full py-1">
+                    </div>
+                    <div class = "py-3 " >
+                    <label for="Last Name">Last Name:</label>
+                    <input type = "text" name= "Last Name:" class = "border border-gray-400 text-gray-900 rounded p-4 w-full py-1">
+                    </div>
+                    <div class = "py-3 " >
+                    <label for="Email">Email:</label>
+                    <input type = "email" name= "Email:" class = "border border-gray-400 text-gray-900 rounded p-4 w-full py-1">
+                    </div>
+                    <div class = "py-3 " >
+                    <label for="Password">Password:</label>
+                    <input type = "password" name= "Password:" class = "border border-gray-400 text-gray-900 rounded p-4 w-full py-1">
+                    </div>
+                    <div class = "py-3 " >
+                    <button type = "submit" class = "px-5 py-1.5 rounded background-color: bg-red-600 text-white font-medium mr-2 mb-2">Sign up</button>
+                    </div>
+                </form>
+            </div>
+        </div>  
+    </body>
+</html>
