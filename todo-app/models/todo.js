@@ -19,12 +19,13 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({title: title, dueDate: dueDate,completed: false, userId})
     }
     static getTodos() {
-      return this.findAll(); 
+      return this.findAll({ order: [["id", "ASC"]] });
     }
-    static async remove(id) {
+    static async remove(id, userId) {
       return this.destroy({
         where: {
           id,
+          userId
         },
       });
       }
@@ -40,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.lt]: new Date().toLocaleDateString("en-CA"),
           },
-          userId,
+          userId: userId,
           completed: false,
         },
         order: [["id", "ASC"]],
@@ -52,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date().toLocaleDateString("en-CA"),
           },
-          userId,
+          userId: userId,
           completed: false,
         },
         order: [["id", "ASC"]],
@@ -64,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.gt]: new Date().toLocaleDateString("en-CA"),
           },
-          userId,
+          userId: userId,
           completed: false,
         },
         order: [["id", "ASC"]],

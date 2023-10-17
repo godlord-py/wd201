@@ -14,28 +14,33 @@ const ejs = require('ejs');
 const passport = require('passport');
 const connectEnsureLogin = require('connect-ensure-login');
 const session = require('express-session');
+const flash = require("connect-flash");
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const { request } = require("http");
 const saltRounds = 10;
-
+app.use(flash());
+app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.json()); 
 app.use(session({
   secret: "my-super-secret-key-63693875353985691365693",
   cookie: {
-    maxAge: 3600000,
+    maxAge: 24 * 60 * 60 * 1000,
   }
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 passport.use(new LocalStrategy({
   usernameField: "email",
   passwordField: "password",
 }, (username, password, done) => {
   User.findOne({where: {email: username}})
-    .then(async(user) => {
+    .then(async function(user)  {
       const result = await bcrypt.compare(password, user.password)
       if(result) {
         return done(null, user)
@@ -110,37 +115,38 @@ app.post("/users", async (request , response) => {
  //hash pass
  const hashedpwd = await bcrypt.hash(request.body.Password, saltRounds)
  try {
-  console.log(request.body.password);
+ 
   const user = await User.create({
     firstName: request.body.firstName,
     lastName: request.body.lastName,
-    Email: request.body.email,
+    email: request.body.Email,
     password: hashedpwd,
   });
   request.login(user, (err) => {
     if(err) {
       console.log(err)
-      console.log(request.body.password);
+    
     } 
     response.redirect("/todos");  
   })
  }catch(error) {
   console.log(error);
-  console.log(request.body.password);
+  
  }
 })
 
 app.get("/login", (request , response) => {
   response.render("login" , {
     title : "Login",
-    csrfToken: request.csrfToken(),
+    csrfToken: request.csrfToken()
   })
 })
 
-app.post("/session", passport.authenticate('local', {failureRedirect: "/login"}) , (request , response) => {
+app.post("/session", passport.authenticate('local', {failureRedirect: "/login", failureFlash: true}), 
+function (request , response) {
   console.log(request.user);
   response.redirect("/todos");
-})
+});
 
 app.get("/signout", (request , response) => {
   request.logout((err) => {
