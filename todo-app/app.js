@@ -26,14 +26,15 @@ app.use(session({
   secret: "my-super-secret-key-63693875353985691365693",
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
-  }
+  } 
 }))
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(function (request, response, next) {
+app.use(function(request, response, next) {
   response.locals.messages = request.flash();
   next();
 });
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 passport.use(new LocalStrategy({
   usernameField: "email",
@@ -177,11 +178,19 @@ app.get("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async function (reque
 });
 
 app.post("/todos", connectEnsureLogin.ensureLoggedIn() , async function (request, response) {
+  if(request.title.length === 0) {
+    request.flash("error", "This field can't be empty.");
+    return response.redirect("/todos");
+  }
+  if(request.body.dueDate.length === 0) {
+    request.flash("error", "This field can't be empty.");
+    return response.redirect("/todos");
+  }
   try {
     await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
-      userID: request.user.id,  
+      userId: request.user.id,  
     })
     return response.redirect("/todos");
   } catch (error) {

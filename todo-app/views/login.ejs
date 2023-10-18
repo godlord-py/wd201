@@ -28,14 +28,11 @@
                     <button type = "submit" class = "px-5 py-1.5 rounded background-color: bg-red-600 text-white font-medium mr-2 mb-2">Sign in</button>
                     </div>
                 </form>
-                <%- include('footer.ejs')%>
                 <% if(messages && messages.error && messages.error.length > 0)  { %>
                     <% for(var i=0; i<messages.error.length; i++) { %>
                             <li> <%= messages.error[i] %></li>
                     <% } %>
                   <% } %>
-                <%= message.error %>
-            </div>
         </div>  
     </body>
 </html>

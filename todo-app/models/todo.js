@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
     static completeditems(userId) {
       return this.findAll({
         where: {
-          userId,
+          userId: userId,
           completed: true,
         },
         order: [["id", "ASC"]],
