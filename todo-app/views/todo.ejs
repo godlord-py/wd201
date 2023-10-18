@@ -6,7 +6,7 @@
   <% for(var i=0;i<data.length;i++) {%>
     <li class = "Todo-Item">
       <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-400">
-         <input id="todo-checkbox-<%= data[i].id %>" type="checkbox" <%= data[i].completed ? "checked" : "" %> onclick="updateTodo(<%= data[i].id %>)" class="w-4 h-4 bg-slate-400 rounded border text-blue-500">   
+         <input id="todo-checkbox-<%= data[i].id %>" type="checkbox" <%= data[i].completed ? "checked" : "" %> onclick="updateTodo(<%= data[i].id %>)" class="w-4 h-4 bg-slate-400 rounded border text-blue-500" >   
         <label for="todo-checkbox-<%= data[i].id %>" class = "ml-2 text-sm text-gray-900 cursor-pointer">
           <%= data[i].title%>
         </label>
