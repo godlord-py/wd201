@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../models/index');
 var cheerio = require("cheerio");
-const agent = request.agent(app);
+
 const CST = (days) => {
   if (!Number.isInteger(days)) {
     throw new Error("Need to pass an integer as days");
@@ -12,16 +12,17 @@ const CST = (days) => {
   return new Date(today.getTime() + days * oneDay)
 }
 // const { DESCRIBE } = require('sequelize/types/query-types');
-let server;
+let server, agent;
 function extractCsrfToken(res) {
   const $ = cheerio.load(res.text);
   return $('[name=_csrf]').val();
 }
 const login = async (agent, username, password) => {
+
   let res = await agent.get("/login");
   let csrfToken = extractCsrfToken(res);
   res = await agent.post("/session").send({
-    email: Email,
+    email: username,
     password: password,
     _csrf: csrfToken,
   });
@@ -31,7 +32,7 @@ describe("Todo test suite", () => {
         await db.sequelize.sync({force: true});
         server = app.listen(4000, () => { });
         agent = request.agent(server);
-
+ 
     });
     afterAll(async () => {
       try {
@@ -41,29 +42,28 @@ describe("Todo test suite", () => {
         console.log(error);
       }
     })    
-})
 test("responds with json at /todos POST endpoint", async () => {
   const agent = request.agent(server);
-  await login(agent, "u.a@test.com", "12345678");
+  await login(agent, "test@test.com", "password");
     const res = await agent.get("/todos");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf": csrfToken,
+      _csrf: csrfToken,
     });
     // console.log(response,"check1")
     expect(response.statusCode).toBe(302);
   });
 test("Sign Up", async ()=> {
-  let response = await agent.get("/signup");
+  let response = await agent.get("/signup ");
   const csrfToken = extractCsrfToken(response);
   response = await agent.post("/users").send({
     firstName: "Test",
     lastName: "User",
-    email: "test@test.com",
-    password: "password",
+    Email: "test@test.com",
+    Password: "password",
     _csrf: csrfToken,
 });
   expect(response.statusCode).toBe(302);   
@@ -78,14 +78,14 @@ test("Sign out", async () => {
   res = await agent.get("/todos");
   expect(res.statusCode).toBe(302);
 });
-   test("Marks a todo with the given ID as complete", async () => {
+test("Marks a todo with the given ID as complete", async () => {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf": csrfToken,
+      _csrf: csrfToken,
     });
 
   });
@@ -101,7 +101,7 @@ test("Sign out", async () => {
       title: "Buy ps3",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
     // const response = await agent.get("/todos");
     // const parsedResponse = JSON.parse(response.text);
@@ -117,7 +117,7 @@ test("Sign out", async () => {
       title: "Buy xbox",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
   });
   // const parsedResponse = JSON.parse(response.text);
   // const todoID = parsedResponse.id;
@@ -132,7 +132,7 @@ test("Should not create a todo item with empty dueDate", async () => {
       title: "Buy milk",
       dueDate: "",
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
   });
 
@@ -144,7 +144,7 @@ test(" Should create sample due today item", async () => {
       title: "sample due today item",
       dueDate: new Date().toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
   });
   test(" Should create sample due later item", async () => {
@@ -154,7 +154,7 @@ test(" Should create sample due today item", async () => {
       title: "sample due later item",
       dueDate: CST(2).toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
   });
   test(" Should create sample overdue item", async () => {
@@ -164,7 +164,7 @@ test(" Should create sample due today item", async () => {
       title: "Sample overdue item",
       dueDate: CST(-2).toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
   });
   test(" Should mark sample overdue item as completed", async () => {
@@ -174,7 +174,7 @@ test(" Should create sample due today item", async () => {
       title: "Buy milk",
       dueDate: CST(-2).toISOString(),
       completed: false,
-      "_csrf": csrfToken
+      _csrf: csrfToken
     });
     const parsedResponse = JSON.parse(response.text);
     const todoID = parsedResponse.id;
@@ -182,7 +182,7 @@ test(" Should create sample due today item", async () => {
     const parsedMarkAsCompletedResponse = JSON.parse(markAsCompletedResponse.text);
     expect(parsedMarkAsCompletedResponse.completed).toBe(true);
   });
-
+});
 
 
 
