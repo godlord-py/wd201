@@ -127,11 +127,11 @@ app.post("/users", async (request , response) => {
     request.flash("error", "Enter a Last Name!.");
     return response.redirect("/signup"); }
 
-  if(request.body.Email.length == 0) {
+  if(request.body.email.length == 0) {
     request.flash("error", "Enter an Email!.");
     return response.redirect("/signup"); }
 
-  if(request.body.Password.length == 0) {
+  if(request.body.password.length == 0) {
     request.flash("error", "Enter a Password!.");
     return response.redirect("/signup"); }
 
