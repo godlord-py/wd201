@@ -140,7 +140,7 @@ app.post("/users", async (request , response) => {
     return response.redirect("/signup"); }
 
  //hash pass
- const hashedpwd = await bcrypt.hash(request.body.Password, saltRounds)
+ const hashedpwd = await bcrypt.hash(request.body.password, saltRounds)
  try {
  
   const user = await User.create({
