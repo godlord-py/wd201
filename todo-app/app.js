@@ -116,21 +116,21 @@ app.get("/signup", (request , response) => {
     csrfToken: request.csrfToken(),
 })
 })
-app.post("/signup", async (request , response) => {
-    try {
-      const { firstName, email, password } = request.body;
-      if (!firstName || !email || !password) {
-        request.flash("error", "Please provide a valid firstName, email, and password");
-        return response.redirect("/signup");
-      }
-      request.flash("success", "User signed up successfully");
-      return response.redirect("/todos");  
-    } catch (error) {
-      console.error(error);
-      request.flash("error", "An error occurred");
-      response.redirect("/signup");
-    }
-});
+// app.post("/signup", async (request , response) => {
+//     try {
+//       const { firstName, email, password } = request.body;
+//       if (!firstName || !email || !password) {
+//         request.flash("error", "Please provide a valid firstName, email, and password");
+//         return response.redirect("/signup");
+//       }
+//       request.flash("success", "User signed up successfully");
+//       return response.redirect("/todos");  
+//     } catch (error) {
+//       console.error(error);
+//       request.flash("error", "An error occurred");
+//       response.redirect("/signup");
+//     }
+// });
 
 app.post("/users", async (request , response) => {
   // checking for empty fields 
@@ -190,7 +190,7 @@ function (request , response) {
   response.redirect("/todos");
 });
 
-app.get("/signout", (request , response) => {
+app.get("/signout", (request , response, next) => {
   request.logout((err) => {
     if (err) {return next(err); }
   response.redirect("/login");
@@ -219,7 +219,7 @@ app.get("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async function (reque
 });
 
 app.post("/todos", connectEnsureLogin.ensureLoggedIn() , async function (request, response) {
-  if(request.title.length === 0) {
+  if(request.body.title.length === 0) {
     request.flash("error", "This field can't be empty.");
     return response.redirect("/todos");
   }
