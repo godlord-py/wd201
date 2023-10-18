@@ -135,7 +135,7 @@ app.post("/users", async (request , response) => {
     request.flash("error", "Enter a Password!.");
     return response.redirect("/signup"); }
 
-  if(request.body.Password.length < 8) {
+  if(request.body.password.length < 8) {
     request.flash("error", "Password must be at least 8 characters long!.");
     return response.redirect("/signup"); }
 
@@ -146,7 +146,7 @@ app.post("/users", async (request , response) => {
   const user = await User.create({
     firstName: request.body.firstName,
     lastName: request.body.lastName,
-    email: request.body.Email,
+    email: request.body.email,
     password: hashedpwd,
   });
   request.login(user, (err) => {
