@@ -6,6 +6,7 @@ const path = require("path");
 const csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser("shhhh, very secret"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
@@ -49,7 +50,10 @@ passport.use(new LocalStrategy({
         return done(null, false, {message: "Incorrect password"})
       }
     }).catch((error) => {
-      return (error)
+      return done(null, false, {
+        message: "Account doesn't exist",
+      })
+
     }) 
 }))
 
@@ -105,14 +109,51 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(),  async (request, response
     })
   }
 });
-
 app.get("/signup", (request , response) => {
-  response.render("signup" , {
+  
+  response.render("signup" , { 
     title : "Sign Up",  
     csrfToken: request.csrfToken(),
-  })
 })
+})
+app.post("/signup", async (request , response) => {
+    try {
+      const { firstName, email, password } = request.body;
+      if (!firstName || !email || !password) {
+        request.flash("error", "Please provide a valid firstName, email, and password");
+        return response.redirect("/signup");
+      }
+      request.flash("success", "User signed up successfully");
+      return response.redirect("/todos");  
+    } catch (error) {
+      console.error(error);
+      request.flash("error", "An error occurred");
+      response.redirect("/signup");
+    }
+});
+
 app.post("/users", async (request , response) => {
+  // checking for empty fields 
+  if(request.body.firstName.length == 0) {
+    request.flash("error", "Enter a Name!.");
+    return response.redirect("/signup"); }
+
+  if(request.body.lastName.length == 0) {
+    request.flash("error", "Enter a Last Name!.");
+    return response.redirect("/signup"); }
+
+  if(request.body.Email.length == 0) {
+    request.flash("error", "Enter an Email!.");
+    return response.redirect("/signup"); }
+
+  if(request.body.Password.length == 0) {
+    request.flash("error", "Enter a Password!.");
+    return response.redirect("/signup"); }
+
+  if(request.body.Password.length < 8) {
+    request.flash("error", "Password must be at least 8 characters long!.");
+    return response.redirect("/signup"); }
+
  //hash pass
  const hashedpwd = await bcrypt.hash(request.body.Password, saltRounds)
  try {
@@ -134,7 +175,7 @@ app.post("/users", async (request , response) => {
   console.log(error);
   
  }
-})
+});
 
 app.get("/login", (request , response) => {
   response.render("login" , {
