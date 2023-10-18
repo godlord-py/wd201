@@ -14,6 +14,7 @@
             <div class = "col-start-3 col-span-2">  
                 <%- include('header.ejs')%>
                 <h6 class="py-4">Sign-up as a new user</h6>
+                <p class="py-2 text-lg border-b-2 mb-2">Already have an account? <a href="/login" class="text-green-600 font-semibold hover:underline">Sign-in</a></p>
                 <form action="/users" method= "post">
                     <input type = "hidden" name="_csrf" value="<%= csrfToken %>" >
                     <div class = "py-3 " >
@@ -36,6 +37,12 @@
                     <button type = "submit" class = "px-5 py-1.5 rounded background-color: bg-red-600 text-white font-medium mr-2 mb-2">Sign up</button>
                     </div>
                 </form>
+                <%- include ('footer.ejs') %>
+                <% if(messages && messages.error && messages.error.length > 0)  { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                      <p class="text-red-600 my-4" style="font-weight: 500;font-size:20px">! <%= messages.error[i] %></p>
+                    <% } %>
+                  <% } %>
             </div>
         </div>  
     </body>
