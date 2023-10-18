@@ -116,21 +116,6 @@ app.get("/signup", (request , response) => {
     csrfToken: request.csrfToken(),
 })
 })
-// app.post("/signup", async (request , response) => {
-//     try {
-//       const { firstName, email, password } = request.body;
-//       if (!firstName || !email || !password) {
-//         request.flash("error", "Please provide a valid firstName, email, and password");
-//         return response.redirect("/signup");
-//       }
-//       request.flash("success", "User signed up successfully");
-//       return response.redirect("/todos");  
-//     } catch (error) {
-//       console.error(error);
-//       request.flash("error", "An error occurred");
-//       response.redirect("/signup");
-//     }
-// });
 
 app.post("/users", async (request , response) => {
   // checking for empty fields 
@@ -182,8 +167,27 @@ app.get("/login", (request , response) => {
     title : "Login",
     csrfToken: request.csrfToken()
   })
-})
-
+});
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      req.flash("error", "Please provide a valid email and password");
+      return res.redirect("/login");
+    }
+    const user = await User.findOne({ where: { email } });
+    if (!user || !user.isValidPassword(password)) {
+      req.flash("error", "Invalid email or password");
+      return res.redirect("/login");
+    }
+  req.flash("success", "Logged in successfully");
+    return res.redirect("/todos");
+  } catch (error) {
+    console.error(error);
+    req.flash("error", "An error occurred");
+    res.redirect("/login");
+  }
+});
 app.post("/session", passport.authenticate('local', {failureRedirect: "/login", failureFlash: true}), 
 function (request , response) {
   console.log(request.user);
