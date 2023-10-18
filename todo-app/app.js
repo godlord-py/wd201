@@ -142,7 +142,6 @@ app.post("/users", async (request , response) => {
  //hash pass
  const hashedpwd = await bcrypt.hash(request.body.password, saltRounds)
  try {
- 
   const user = await User.create({
     firstName: request.body.firstName,
     lastName: request.body.lastName,
@@ -197,7 +196,7 @@ function (request , response) {
 app.get("/signout", (request , response, next) => {
   request.logout((err) => {
     if (err) {return next(err); }
-  response.redirect("/login");
+  response.redirect("/");
   })
 })
 app.get("/todos", async function (_request, response) {
