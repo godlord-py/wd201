@@ -3,6 +3,7 @@ const app = express();
 const { Todo, User } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
+const router = express.Router();
 const csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
@@ -73,11 +74,14 @@ passport.deserializeUser((id, done) => {
 }); 
 
 app.get("/", async (request, response) => {
-  response.render("index", {
-    title: "Todo List",
-    csrfToken: request.csrfToken(),
-  });
-});
+    if(request.isAuthenticated()){
+     return response.redirect("/todos")
+    }
+       response.render("index", { 
+         title: "Todo List", 
+         csrfToken: request.csrfToken(), 
+       }); 
+     });
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/todos", connectEnsureLogin.ensureLoggedIn(),  async (request, response) => { 
@@ -181,7 +185,8 @@ app.post("/login", async (req, res) => {
     }
   req.flash("success", "Logged in successfully");
     return res.redirect("/todos");
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error);
     req.flash("error", "An error occurred");
     res.redirect("/login");
@@ -192,7 +197,6 @@ function (request , response) {
   console.log(request.user);
   response.redirect("/todos");
 });
-
 app.get("/signout", (request , response, next) => {
   request.logout((err) => {
     if (err) {return next(err); }
