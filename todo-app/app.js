@@ -266,7 +266,7 @@ app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (reques
     console.log(error);
     return response.status(422).json(error);
   }
-});
+}); 
 
 app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
