@@ -51,7 +51,7 @@ jobs:
       - name: Run the app
         id: run-app
         run: |
-          cd l10
+          cd todo-app
           npm install
           npx sequelize-cli db:drop
           npx sequelize-cli db:create
@@ -61,6 +61,6 @@ jobs:
 
       - name: Run integration tests
         run: |
-          cd l10
+          cd todo-app
           npm install cypress cypress-json-results
           npx cypress run --env STUDENT_SUBMISSION_URL="http://localhost:3000/"
