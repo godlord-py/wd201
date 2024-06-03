@@ -47,7 +47,7 @@ jobs:
         run: cd todo-app && npm ci
 
       - name: Run unit tests
-        run: cd l10 && npm test
+        run: cd todo-app && npm test
       - name: Run the app
         id: run-app
         run: |
